@@ -80,7 +80,7 @@ def on_press(key):
         if key == keyboard.Key.space:
             char = ' '
         else:
-            return True  # Ignore other special keys
+            return  # Ignore other special keys
 
     if char and char in KEYBOARD_LAYOUT_COORDINATES:
         key_pos = KEYBOARD_LAYOUT_COORDINATES[char]
@@ -89,11 +89,10 @@ def on_press(key):
             g_pressed_keys_buffer.pop(0)
         print(
             f"Key: '{char}' ({key_pos}). Buffer size: {len(g_pressed_keys_buffer)}")
-    return True
 
 
 def on_release(key):
-    return True  # No changes here
+    return  # No changes here
 
 # --- Main Processing Logic (updated) ---
 
