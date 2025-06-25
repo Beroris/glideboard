@@ -179,18 +179,7 @@ def on_press(key):
         # If space is pressed with an empty buffer, just let it pass through.
         return True
 
-    # Regular pause detection for non-space key presses
-    if current_time - g_last_key_press_time > WORD_END_PAUSE_SECONDS:
-        if g_pressed_keys_buffer:  # Only process if there's actual buffer content
-            print(
-                f"\n--- Pause detected ({current_time - g_last_key_press_time:.2f}s). Processing previous buffer. ---")
-            buffer_for_prediction = list(g_pressed_keys_buffer)  # Make a copy
-            g_pressed_keys_buffer = []  # Reset buffer
-            process_current_buffer(buffer_for_prediction,
-                                   triggered_by_space=False)
-        else:
-            print(
-                f"\n--- Pause detected ({current_time - g_last_key_press_time:.2f}s). Received an empty buffer for processing. ---")
+    # Remove pause-based autocorrect trigger. No autocorrect on pause or any other key.
 
     g_last_key_press_time = current_time
 
@@ -340,14 +329,10 @@ def process_current_buffer(buffer, triggered_by_space):
             # Add a slight delay here before space for better visual flow
             time.sleep(0.01)
 
-            # Only auto-insert space if the user did NOT trigger with a space
-            if not triggered_by_space:
-                g_keyboard_controller.press(Key.space)
-                g_keyboard_controller.release(Key.space)
-                print(f"Successfully typed '{predicted_word}' and a space.")
-            else:
-                print(
-                    f"Successfully typed '{predicted_word}'. Space already provided by user.")
+            g_keyboard_controller.press(Key.space)
+            g_keyboard_controller.release(Key.space)
+
+            print(f"Successfully typed '{predicted_word}' and a space.")
 
         finally:
             # Set injection flag back to False
